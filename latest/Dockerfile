@@ -84,15 +84,23 @@ ENV PATH $PATH:/home/steve/.julia/v0.4/ProtoBuf/plugin
 
 WORKDIR /home/steve
 ENV HOME /home/steve
-ADD bashrc /home/steve/.bashrc
 
 # Add the git bash prompt
 RUN git clone https://github.com/arialdomartini/oh-my-git.git /home/steve/.oh-my-git
+RUN echo '\
+source /home/steve/.oh-my-git/prompt.sh
+' >> /home/steve/.bashrc
 
 # Add python virtualenvwrapper
 RUN pip install virtualenvwrapper
 RUN ln -s /usr/local/bin/virtualenvwrapper.sh /usr/bin/virtualenvwrapper.sh
 RUN bash -c "source /usr/local/bin/virtualenvwrapper.sh"
+
+RUN echo '\
+export WORKON_HOME=$HOME/.virtualenvs
+export PROJECT_HOME=$HOME/devel
+source /usr/local/bin/virtualenvwrapper.sh
+' >> /home/steve/.bashrc
 
 # Link in shared parts of the home directory
 RUN ln -s /var/shared/.vimrc /home/steve/.vimrc
