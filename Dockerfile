@@ -70,7 +70,7 @@ ENV HOME /home/steve
 # Add the git bash prompt
 RUN git clone https://github.com/arialdomartini/oh-my-git.git /home/steve/.oh-my-git
 RUN echo '\
-source /home/steve/.oh-my-git/prompt.sh
+source /home/steve/.oh-my-git/prompt.sh\n\
 ' >> /home/steve/.bashrc
 
 # Add python virtualenvwrapper
@@ -79,9 +79,9 @@ RUN ln -s /usr/local/bin/virtualenvwrapper.sh /usr/bin/virtualenvwrapper.sh
 RUN bash -c "source /usr/local/bin/virtualenvwrapper.sh"
 
 RUN echo '\
-export WORKON_HOME=$HOME/.virtualenvs
-export PROJECT_HOME=$HOME/devel
-source /usr/local/bin/virtualenvwrapper.sh
+export WORKON_HOME=$HOME/.virtualenvs\n\
+export PROJECT_HOME=$HOME/devel\n\
+source /usr/local/bin/virtualenvwrapper.sh\n\
 ' >> /home/steve/.bashrc
 
 # Link in shared parts of the home directory
@@ -107,5 +107,5 @@ RUN echo user_allow_other >> /etc/fuse.conf
 RUN chown -R steve: /home/steve
 USER steve
 
-COPY ./docker-entrypoint.sh /
-ENTRYPOINT ["/docker-entrypoint.sh"]
+ADD entrypoint.sh /
+ENTRYPOINT ["/entrypoint.sh"]
