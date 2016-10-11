@@ -2,65 +2,47 @@ FROM ubuntu:14.04
 
 # Install dev environment
 RUN apt-get update && apt-get install -y \
-  git \
-  python \
-  curl \
-  vim \
-  strace \
-  diffstat \
-  pkg-config \
-  cmake \
-  build-essential \
-  tcpdump \
-  screen \
-  python-pip \
+  ack-grep \
+  autoconf \
   bash-completion \
-  ack-grep
-
-# Install docker client
-RUN apt-get install apt-transport-https 
-RUN apt-get install ca-certificates
-RUN apt-key adv \
-  --keyserver hkp://p80.pool.sks-keyservers.net:80 \
-  --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
-RUN echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" > /etc/apt/sources.list.d/docker.list
-RUN apt-get update
-RUN apt-get install docker
-
-# Install c++ build deps for are-platform
-RUN apt-get update && apt-get install -y \
+  bindfs \
+  build-essential \
   cmake \
+  cmake \
+  curl \
+  diffstat \
   g++ \
-  pkg-config \
-  lcov \
   gcovr \
-  libboost-dev \
+  git \
+  lcov \
   libboost-date-time-dev \
+  libboost-dev \
+  libboost-filesystem-dev \
   libboost-regex-dev \
   libboost-signals-dev \
-  libboost-thread-dev \
-  libboost-filesystem-dev \
   libboost-test-dev \
-  libssl-dev \
-  libzmq3-dev \
+  libboost-thread-dev \
   libevent-dev \
-  libyaml-cpp-dev \
-  wget \
-  autoconf \
-  unzip \
-  libtool \
   libprotobuf-dev \
+  libssl-dev \
+  libtool \
+  libyaml-cpp-dev \
+  libzmq3-dev \
+  pkg-config \
+  pkg-config \
   protobuf-compiler \
-  bindfs
-
-WORKDIR /
-RUN rm -rf /src/protobuf
+  python \
+  python-pip \
+  screen \
+  strace \
+  tcpdump \
+  unzip \
+  vim \
+  wget
 
 # Install the julia and the julia protobuf plugin
-RUN apt-get install -y software-properties-common
-RUN apt-add-repository -y ppa:staticfloat/juliareleases
-RUN apt-get update
-RUN apt-get install -y julia
+RUN wget -O - "https://julialang.s3.amazonaws.com/bin/linux/x64/0.5/julia-0.5.0-linux-x86_64.tar.gz" | tar zxvf - -C /opt
+RUN ln -s /opt/julia-3c9d75391c/bin/julia /usr/bin/julia
 RUN julia -e 'Pkg.update(); Pkg.add("ProtoBuf")'
 
 # Setup home environment
@@ -80,7 +62,7 @@ RUN touch /var/shared/placeholder
 RUN chown -R steve:steve /var/shared
 VOLUME /var/shared
 
-ENV PATH $PATH:/home/steve/.julia/v0.4/ProtoBuf/plugin
+ENV PATH $PATH:/home/steve/.julia/v0.5/ProtoBuf/plugin
 
 WORKDIR /home/steve
 ENV HOME /home/steve
