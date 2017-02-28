@@ -7,8 +7,6 @@ RUN apt-get update && apt-get install -y \
   bash-completion \
   bindfs \
   build-essential \
-  cmake \
-  cmake \
   curl \
   diffstat \
   g++ \
@@ -38,7 +36,13 @@ RUN apt-get update && apt-get install -y \
   tcpdump \
   unzip \
   vim \
-  wget
+  wget \
+  software-properties-common \
+  python-software-properties
+
+# Install cmake
+RUN add-apt-repository -y ppa:george-edison55/cmake-3.x
+RUN apt-get update && apt-get install -y cmake
 
 # Install the julia and the julia protobuf plugin
 RUN wget -O - "https://julialang.s3.amazonaws.com/bin/linux/x64/0.5/julia-0.5.0-linux-x86_64.tar.gz" | tar zxvf - -C /opt
@@ -71,17 +75,6 @@ ENV HOME /home/steve
 RUN git clone https://github.com/arialdomartini/oh-my-git.git /home/steve/.oh-my-git
 RUN echo '\
 source /home/steve/.oh-my-git/prompt.sh\n\
-' >> /home/steve/.bashrc
-
-# Add python virtualenvwrapper
-RUN pip install virtualenvwrapper
-RUN ln -s /usr/local/bin/virtualenvwrapper.sh /usr/bin/virtualenvwrapper.sh
-RUN bash -c "source /usr/local/bin/virtualenvwrapper.sh"
-
-RUN echo '\
-export WORKON_HOME=$HOME/.virtualenvs\n\
-export PROJECT_HOME=$HOME/devel\n\
-source /usr/local/bin/virtualenvwrapper.sh\n\
 ' >> /home/steve/.bashrc
 
 # Link in shared parts of the home directory
